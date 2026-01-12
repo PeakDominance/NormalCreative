@@ -1,0 +1,675 @@
+package me.peakdominance.nc;
+
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class NormalCreative implements ModInitializer {
+	public static final Logger LOGGER = LoggerFactory.getLogger("NormalCreative");
+	public static final Config config = new Config();
+
+	@Override
+	public void onInitialize() {
+		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+			if (!type.isAdvanced()) return;
+			String numericalId = switch (stack.getItem().toString().split(":")[1]) {
+				case "stone" -> "1:0";
+				case "granite" -> "1:1";
+				case "polished_granite" -> "1:2";
+				case "diorite" -> "1:3";
+				case "polished_diorite" -> "1:4";
+				case "andesite" -> "1:5";
+				case "polished_andesite" -> "1:6";
+				case "grass_block" -> "2:0";
+				case "dirt" -> "3:0";
+				case "coarse_dirt" -> "3:1";
+				case "podzol" -> "3:2";
+				case "cobblestone" -> "4:0";
+				case "oak_planks" -> "5:0";
+				case "spruce_planks" -> "5:1";
+				case "birch_planks" -> "5:2";
+				case "jungle_planks" -> "5:3";
+				case "acacia_planks" -> "5:4";
+				case "dark_oak_planks" -> "5:5";
+				case "oak_sapling" -> "6:0";
+				case "spruce_sapling" -> "6:1";
+				case "birch_sapling" -> "6:2";
+				case "jungle_sapling" -> "6:3";
+				case "acacia_sapling" -> "6:4";
+				case "dark_oak_sapling" -> "6:5";
+				case "bedrock" -> "7:0";
+				case "water" -> "8:0";
+				case "stationary_water" -> "9:0";
+				case "lava" -> "10:0";
+				case "stationary_lava" -> "11:0";
+				case "sand" -> "12:0";
+				case "red_sand" -> "12:1";
+				case "gravel" -> "13:0";
+				case "gold_ore" -> "14:0";
+				case "iron_ore" -> "15:0";
+				case "coal_ore" -> "16:0";
+				case "oak_log" -> "17:0";
+				case "spruce_log" -> "17:1";
+				case "birch_log" -> "17:2";
+				case "jungle_log" -> "17:3";
+				case "oak_leaves" -> "18:0";
+				case "spruce_leaves" -> "18:1";
+				case "birch_leaves" -> "18:2";
+				case "jungle_leaves" -> "18:3";
+				case "sponge" -> "19:0";
+				case "wet_sponge" -> "19:1";
+				case "glass" -> "20:0";
+				case "lapis_ore" -> "21:0";
+				case "lapis_block" -> "22:0";
+				case "dispenser" -> "23:0";
+				case "sandstone" -> "24:0";
+				case "chiseled_sandstone" -> "24:1";
+				case "note_block" -> "25:0";
+				case "powered_rail" -> "27:0";
+				case "detector_rail" -> "28:0";
+				case "sticky_piston" -> "29:0";
+				case "cobweb" -> "30:0";
+				case "dead_shrub" -> "31:0";
+				case "short_grass" -> "31:1";
+				case "fern" -> "31:2";
+				case "dead_bush" -> "32:0";
+				case "piston" -> "33:0";
+				case "piston_extension" -> "34:0";
+				case "white_wool" -> "35:0";
+				case "orange_wool" -> "35:1";
+				case "magenta_wool" -> "35:2";
+				case "light_blue_wool" -> "35:3";
+				case "yellow_wool" -> "35:4";
+				case "lime_wool" -> "35:5";
+				case "pink_wool" -> "35:6";
+				case "gray_wool" -> "35:7";
+				case "light_gray_wool" -> "35:8";
+				case "cyan_wool" -> "35:9";
+				case "purple_wool" -> "35:10";
+				case "blue_wool" -> "35:11";
+				case "brown_wool" -> "35:12";
+				case "green_wool" -> "35:13";
+				case "red_wool" -> "35:14";
+				case "black_wool" -> "35:15";
+				case "piston_moving_piece" -> "36:0";
+				case "dandelion" -> "37:0";
+				case "poppy" -> "38:0";
+				case "blue_orchid" -> "38:1";
+				case "allium" -> "38:2";
+				case "azure_bluet" -> "38:3";
+				case "red_tulip" -> "38:4";
+				case "orange_tulip" -> "38:5";
+				case "white_tulip" -> "38:6";
+				case "pink_tulip" -> "38:7";
+				case "oxeye_daisy" -> "38:8";
+				case "brown_mushroom" -> "39:0";
+				case "red_mushroom" -> "40:0";
+				case "gold_block" -> "41:0";
+				case "iron_block" -> "42:0";
+//              43 - double steps
+				case "smooth_stone_slab" -> "44:0 / 43:0 (double) / 43:8 (double, smooth)";
+				case "sandstone_slab" -> "44:1 / 43:1 (double) / 43:9 (double, smooth)";
+				case "oak_slab" -> "126:0 / 125:0 / 44:2 / 43:2";
+				case "cobblestone_slab" -> "44:3 / 43:3 (double)";
+				case "brick_slab" -> "44:4 / 43:4 (double)";
+				case "stone_brick_slab" -> "44:5 / 43:5 (double)";
+				case "nether_brick_slab" -> "44:6 / 43:6 (double)";
+				case "quartz_slab" -> "44:7 / 43:7 (double)";
+				case "bricks" -> "45:0";
+				case "tnt" -> "46:0";
+				case "bookshelf" -> "47:0";
+				case "mossy_cobblestone" -> "48:0";
+				case "obsidian" -> "49:0";
+				case "torch" -> "50:0";
+				case "fire" -> "51:0";
+				case "spawner" -> "52:0";
+				case "oak_stairs" -> "53:0";
+				case "chest" -> "54:0";
+//              55 -redstone wire
+				case "diamond_ore" -> "56:0";
+				case "diamond_block" -> "57:0";
+				case "crafting_table" -> "58:0";
+//              59 crops (wheat)
+				case "farmland" -> "60:0";
+				case "furnace" -> "61:0 / 62:0 (lit)";
+//              62 - lit_furnace
+//              63 - sign_post
+//              64 - wooden_door (block)
+				case "ladder" -> "65:0";
+				case "rail" -> "66:0";
+				case "cobblestone_stairs" -> "67:0";
+//              68 - wall_sign
+				case "lever" -> "69:0";
+				case "stone_pressure_plate" -> "70:0";
+//              71 - iron_door (block)
+				case "oak_pressure_plate" -> "72:0";
+				case "redstone_ore" -> "73:0 / 74:0 (glowing)";
+//              74 - glowing_redstone_ore
+//              75 - redstone_torch_off
+				case "redstone_torch" -> "76:0 (on) / 75:0 (off)";
+				case "stone_button" -> "77:0";
+				case "snow" -> "78:0";
+				case "ice" -> "79:0";
+				case "snow_block" -> "80:0";
+				case "cactus" -> "81:0";
+				case "clay" -> "82:0";
+//              83 - reed
+				case "jukebox" -> "84:0";
+				case "oak_fence" -> "85:0";
+				case "pumpkin" -> "86:0";
+				case "netherrack" -> "87:0";
+				case "soul_sand" -> "88:0";
+				case "glowstone" -> "89:0";
+//              90 - portal
+				case "jack_o_lantern" -> "91:0";
+//              92 - cake_block
+//              93 - diode_block_off
+//              94 -diode_block_on
+				case "white_stained_glass" -> "95:0";
+				case "orange_stained_glass" -> "95:1";
+				case "magenta_stained_glass" -> "95:2";
+				case "light_blue_stained_glass" -> "95:3";
+				case "yellow_stained_glass" -> "95:4";
+				case "lime_stained_glass" -> "95:5";
+				case "pink_stained_glass" -> "95:6";
+				case "gray_stained_glass" -> "95:7";
+				case "light_gray_stained_glass" -> "95:8";
+				case "cyan_stained_glass" -> "95:9";
+				case "purple_stained_glass" -> "95:10";
+				case "blue_stained_glass" -> "95:11";
+				case "brown_stained_glass" -> "95:12";
+				case "green_stained_glass" -> "95:13";
+				case "red_stained_glass" -> "95:14";
+				case "black_stained_glass" -> "95:15";
+				case "oak_trapdoor" -> "96:0";
+				case "infested_stone" -> "97:0";
+				case "infested_cobblestone" -> "97:1";
+				case "infested_stone_bricks" -> "97:2";
+				case "infested_mossy_stone_bricks" -> "97:3";
+				case "infested_cracked_stone_bricks" -> "97:4";
+				case "infested_chiseled_stone_bricks" -> "97:5";
+				case "stone_bricks" -> "98:0";
+				case "mossy_stone_bricks" -> "98:1";
+				case "cracked_stone_bricks" -> "98:2";
+				case "chiseled_stone_bricks" -> "98:3";
+				case "brown_mushroom_block" -> "99:0";
+//                case "mushroom_stem" -> "99:10";
+				case "red_mushroom_block" -> "100:0";
+				case "iron_bars" -> "101:0";
+				case "glass_pane" -> "102:0";
+				case "melon" -> "103:0";
+//              104 - pumpkin stem
+//              105 - melon stem
+				case "vine" -> "106:0";
+				case "oak_fence_gate" -> "107:0";
+				case "brick_stairs" -> "108:0";
+				case "stone_brick_stairs" -> "109:0";
+				case "mycelium" -> "110:0";
+				case "lily_pad" -> "111:0";
+				case "nether_bricks" -> "112:0";
+				case "nether_brick_fence" -> "113:0";
+				case "nether_brick_stairs" -> "114:0";
+//              115 - nether warts
+				case "enchanting_table" -> "116:0";
+//              117 - brewing stand (block)
+//              118 - cauldron (block)
+//              119 - ender_portal (block)
+				case "end_portal_frame" -> "120:0";
+				case "end_stone" -> "121:0";
+				case "dragon_egg" -> "122:0";
+				case "redstone_lamp" -> "123:0 (off) / 124:0 (on)";
+//              124 - redstone_lamp_on
+//              125 - double steps
+				case "spruce_slab" -> "126:1 / 125:1 (double)";
+				case "birch_slab" -> "126:2 / 125:2 (double)";
+				case "jungle_slab" -> "126:3 / 125:3 (double)";
+				case "acacia_slab" -> "126:4 / 125:4 (double)";
+				case "dark_oak_slab" -> "126:5 / 125:5 (double)";
+//              127 - cocoa
+				case "sandstone_stairs" -> "128:0";
+				case "emerald_ore" -> "129:0";
+				case "ender_chest" -> "130:0";
+				case "tripwire_hook" -> "131:0";
+//              132 - tripwire
+				case "emerald_block" -> "133:0";
+				case "spruce_stairs" -> "134:0";
+				case "birch_stairs" -> "135:0";
+				case "jungle_stairs" -> "136:0";
+				case "command_block" -> "137:0";
+				case "beacon" -> "138:0";
+				case "cobblestone_wall" -> "139:0";
+				case "mossy_cobblestone_wall" -> "139:1";
+//              140 - flower pot block
+				case "carrot" -> "391:0 (item) / 141:0 (block)";
+//              142 - potatoes
+				case "oak_button" -> "143:0";
+				// blocks
+//                case "skeleton_skull": numericalId = "144:0"; break;
+//                case "wither_skeleton_skull": numericalId = "144:1"; break;
+//                case "zombie_head": numericalId = "144:2"; break;
+//                case "player_head": numericalId = "144:3"; break;
+//                case "creeper_head": numericalId = "144:4"; break;
+//              144:5 - dragon_head
+				case "anvil" -> "145:0";
+				case "chipped_anvil" -> "145:1";
+				case "damaged_anvil" -> "145:2";
+				case "trapped_chest" -> "146:0";
+				case "light_weighted_pressure_plate" -> "147:0";
+				case "heavy_weighted_pressure_plate" -> "148:0";
+//              149 - redstone comparator off
+//              150 - redstone comparator on
+				case "daylight_detector" -> "151:0 / 178:0 (inverted)";
+				case "redstone_block" -> "152:0";
+				case "nether_quartz_ore" -> "153:0";
+				case "hopper" -> "154:0";
+				case "quartz_block" -> "155:0";
+				case "chiseled_quartz_block" -> "155:1";
+				case "quartz_pillar" -> "155:2";
+				case "quartz_stairs" -> "156:0";
+				case "activator_rail" -> "157:0";
+				case "dropper" -> "158:0";
+				case "white_terracotta" -> "159:0";
+				case "orange_terracotta" -> "159:1";
+				case "magenta_terracotta" -> "159:2";
+				case "light_blue_terracotta" -> "159:3";
+				case "yellow_terracotta" -> "159:4";
+				case "lime_terracotta" -> "159:5";
+				case "pink_terracotta" -> "159:6";
+				case "gray_terracotta" -> "159:7";
+				case "light_gray_terracotta" -> "159:8";
+				case "cyan_terracotta" -> "159:9";
+				case "purple_terracotta" -> "159:10";
+				case "blue_terracotta" -> "159:11";
+				case "brown_terracotta" -> "159:12";
+				case "green_terracotta" -> "159:13";
+				case "red_terracotta" -> "159:14";
+				case "black_terracotta" -> "159:15";
+				case "white_stained_glass_pane" -> "160:0";
+				case "orange_stained_glass_pane" -> "160:1";
+				case "magenta_stained_glass_pane" -> "160:2";
+				case "light_blue_stained_glass_pane" -> "160:3";
+				case "yellow_stained_glass_pane" -> "160:4";
+				case "lime_stained_glass_pane" -> "160:5";
+				case "pink_stained_glass_pane" -> "160:6";
+				case "gray_stained_glass_pane" -> "160:7";
+				case "light_gray_stained_glass_pane" -> "160:8";
+				case "cyan_stained_glass_pane" -> "160:9";
+				case "purple_stained_glass_pane" -> "160:10";
+				case "blue_stained_glass_pane" -> "160:11";
+				case "brown_stained_glass_pane" -> "160:12";
+				case "green_stained_glass_pane" -> "160:13";
+				case "red_stained_glass_pane" -> "160:14";
+				case "black_stained_glass_pane" -> "160:15";
+				case "acacia_leaves" -> "161:0";
+				case "dark_oak_leaves" -> "161:1";
+				case "acacia_log" -> "162:0";
+				case "dark_oak_log" -> "162:1";
+				case "acacia_stairs" -> "163:0";
+				case "dark_oak_stairs" -> "164:0";
+				case "slime_block" -> "165:0";
+				case "barrier" -> "166:0";
+				case "iron_trapdoor" -> "167:0";
+				case "prismarine" -> "168:0";
+				case "prismarine_bricks" -> "168:1";
+				case "dark_prismarine" -> "168:2";
+				case "sea_lantern" -> "169:0";
+				case "hay_block" -> "170:0";
+				case "white_carpet" -> "171:0";
+				case "orange_carpet" -> "171:1";
+				case "magenta_carpet" -> "171:2";
+				case "light_blue_carpet" -> "171:3";
+				case "yellow_carpet" -> "171:4";
+				case "lime_carpet" -> "171:5";
+				case "pink_carpet" -> "171:6";
+				case "gray_carpet" -> "171:7";
+				case "light_gray_carpet" -> "171:8";
+				case "cyan_carpet" -> "171:9";
+				case "purple_carpet" -> "171:10";
+				case "blue_carpet" -> "171:11";
+				case "brown_carpet" -> "171:12";
+				case "green_carpet" -> "171:13";
+				case "red_carpet" -> "171:14";
+				case "black_carpet" -> "171:15";
+				case "terracotta" -> "172:0";
+				case "coal_block" -> "173:0";
+				case "packed_ice" -> "174:0";
+				case "sunflower" -> "175:0";
+				case "lilac" -> "175:1";
+				case "tall_grass" -> "175:2";
+				case "large_fern" -> "175:3";
+				case "rose_bush" -> "175:4";
+				case "peony" -> "175:5";
+//              176 - standing banner
+//              177 - wall banner
+//              178 - daylight detector inverted
+				case "red_sandstone" -> "179:0";
+				case "chiseled_red_sandstone" -> "179:1";
+				case "red_sandstone_stairs" -> "180:0";
+//              181 - double_stone_2
+				case "red_sandstone_slab" -> "182:0 / 181:0 (double) / 181:8 (double, smooth)";
+				case "spruce_fence_gate" -> "183:0";
+				case "birch_fence_gate" -> "184:0";
+				case "jungle_fence_gate" -> "185:0";
+				case "dark_oak_fence_gate" -> "186:0";
+				case "acacia_fence_gate" -> "187:0";
+				case "spruce_fence" -> "188:0";
+				case "birch_fence" -> "189:0";
+				case "jungle_fence" -> "190:0";
+				case "dark_oak_fence" -> "191:0";
+				case "acacia_fence" -> "192:0";
+//              blocks
+//                case "spruce_door": numericalId = "193:0"; break;
+//                case "birch_door": numericalId = "194:0"; break;
+//                case "jungle_door": numericalId = "195:0"; break;
+//                case "acacia_door": numericalId = "196:0"; break;
+//                case "dark_oak_door": numericalId = "197:0"; break;
+				case "iron_shovel" -> "256:0";
+				case "iron_pickaxe" -> "257:0";
+				case "iron_axe" -> "258:0";
+				case "flint_and_steel" -> "259:0";
+				case "apple" -> "260:0";
+				case "bow" -> "261:0";
+				case "arrow" -> "261:0";
+				case "coal" -> "263:0";
+				case "charcoal" -> "263:1";
+				case "diamond" -> "264:0";
+				case "iron_ingot" -> "265:0";
+				case "gold_ingot" -> "266:0";
+				case "iron_sword" -> "267:0";
+				case "wooden_sword" -> "268:0";
+				case "wooden_shovel" -> "269:0";
+				case "wooden_pickaxe" -> "270:0";
+				case "wooden_axe" -> "271:0";
+				case "stone_sword" -> "272:0";
+				case "stone_shovel" -> "273:0";
+				case "stone_pickaxe" -> "274:0";
+				case "stone_axe" -> "275:0";
+				case "diamond_sword" -> "276:0";
+				case "diamond_shovel" -> "277:0";
+				case "diamond_pickaxe" -> "278:0";
+				case "diamond_axe" -> "279:0";
+				case "stick" -> "280:0";
+				case "bowl" -> "281:0";
+				case "mushroom_stew" -> "282:0";
+				case "golden_sword" -> "283:0";
+				case "golden_shovel" -> "284:0";
+				case "golden_pickaxe" -> "285:0";
+				case "golden_axe" -> "286:0";
+				case "string" -> "287:0 (item) / 132:0 (block)";
+				case "feather" -> "288:0";
+				case "gunpowder" -> "289:0";
+				case "wooden_hoe" -> "290:0";
+				case "stone_hoe" -> "291:0";
+				case "iron_hoe" -> "292:0";
+				case "diamond_hoe" -> "293:0";
+				case "golden_hoe" -> "294:0";
+				case "wheat_seeds" -> "295:0 (item) / 59:0 (block)";
+				case "wheat" -> "296:0 (item) / 59:0 (block)";
+				case "bread" -> "297:0";
+				case "leather_helmet" -> "298:0";
+				case "leather_chestplate" -> "299:0";
+				case "leather_leggings" -> "300:0";
+				case "leather_boots" -> "301:0";
+				case "chainmail_helmet" -> "302:0";
+				case "chainmail_chestplate" -> "303:0";
+				case "chainmail_leggings" -> "304:0";
+				case "chainmail_boots" -> "305:0";
+				case "iron_helmet" -> "306:0";
+				case "iron_chestplate" -> "307:0";
+				case "iron_leggings" -> "308:0";
+				case "iron_boots" -> "309:0";
+				case "diamond_helmet" -> "310:0";
+				case "diamond_chestplate" -> "311:0";
+				case "diamond_leggings" -> "312:0";
+				case "diamond_boots" -> "313:0";
+				case "golden_helmet" -> "314:0";
+				case "golden_chestplate" -> "315:0";
+				case "golden_leggings" -> "316:0";
+				case "golden_boots" -> "317:0";
+				case "flint" -> "318:0";
+				case "porkchop" -> "319:0";
+				case "cooked_porkchop" -> "320:0";
+				case "painting" -> "321:0";
+				case "golden_apple" -> "322:0";
+				case "enchanted_golden_apple" -> "322:1";
+				case "oak_sign" -> "323:0 (item) / 63:0 (block) / 68:0 (block, wall_sign)";
+				case "oak_door" -> "324:0 (item) / 64:0 (block)";
+				case "bucket" -> "325:0";
+				case "water_bucket" -> "326:0";
+				case "lava_bucket" -> "327:0";
+				case "minecart" -> "328:0";
+				case "saddle" -> "329:0";
+				case "iron_door" -> "330:0 (item) / 71:0 (block)";
+				case "redstone" -> "331:0 (item) / 55:0 (block)";
+				case "snowball" -> "332:0";
+				case "oak_boat" -> "333:0";
+				case "leather" -> "334:0";
+				case "milk_bucket" -> "335:0";
+				case "brick" -> "336:0";
+				case "clay_ball" -> "337:0";
+				case "sugar_cane" -> "338:0 (item) / 83:0 (block)";
+				case "paper" -> "339:0";
+				case "book" -> "340:0";
+				case "slime_ball" -> "341:0";
+				case "chest_minecart" -> "342:0";
+				case "furnace_minecart" -> "343:0";
+				case "egg" -> "344:0";
+				case "compass" -> "345:0";
+				case "fishing_rod" -> "346:0";
+				case "clock" -> "347:0";
+				case "glowstone_dust" -> "348:0";
+				case "cod" -> "349:0";
+				case "salmon" -> "349:1";
+				case "tropical_fish" -> "349:2";
+				case "pufferfish" -> "349:3";
+				case "cooked_cod" -> "350:0";
+				case "cooked_salmon" -> "350:1";
+				case "ink_sac" -> "351:0";
+				case "red_dye" -> "351:1";
+				case "green_dye" -> "351:2";
+				case "cocoa_beans" -> "351:3 (item) / 127:0 (block)";
+				case "lapis_lazuli" -> "351:4";
+				case "purple_dye" -> "351:5";
+				case "cyan_dye" -> "351:6";
+				case "light_gray_dye" -> "351:7";
+				case "gray_dye" -> "351:8";
+				case "pink_dye" -> "351:9";
+				case "lime_dye" -> "351:10";
+				case "yellow_dye" -> "351:11";
+				case "light_blue_dye" -> "351:12";
+				case "magenta_dye" -> "351:13";
+				case "orange_dye" -> "351:14";
+				case "bone_meal" -> "351:15";
+				case "bone" -> "352:0";
+				case "sugar" -> "353:0";
+				case "cake" -> "354:0 (item) / 92:0 (block)";
+				case "red_bed" -> "355:0 (item) / 26:0 (block)";
+				case "repeater" -> "356:0 (item) / 93:0 (block, off) / 94:0 (block, on)";
+				case "cookie" -> "357:0";
+//              358 - map
+				case "shears" -> "359:0";
+				case "melon_slice" -> "360:0";
+				case "pumpkin_seeds" -> "361:0 (item) / 104:0 (block)";
+				case "melon_seeds" -> "362:0 (item) / 105:0 (block)";
+				case "beef" -> "363:0";
+				case "cooked_beef" -> "364:0";
+				case "chicken" -> "365:0";
+				case "cooked_chicken" -> "366:0";
+				case "rotten_flesh" -> "367:0";
+				case "ender_pearl" -> "368:0";
+				case "blaze_rod" -> "369:0";
+				case "ghast_tear" -> "370:0";
+				case "gold_nugget" -> "371:0";
+				case "nether_wart" -> "372:0 (item) / 115:0 (block)";
+				case "potion" -> "373:0";
+				case "glass_bottle" -> "374:0";
+				case "spider_eye" -> "375:0";
+				case "fermented_spider_eye" -> "376:0";
+				case "blaze_powder" -> "377:0";
+				case "magma_cream" -> "378:0";
+				case "brewing_stand" -> "379:0 (item) / 117:0 (block)";
+				case "cauldron" -> "380:0 (item) / 118:0 (block)";
+				case "ender_eye" -> "381:0";
+				case "glistering_melon_slice" -> "382:0";
+//              383:0 - spawn egg
+				case "creeper_spawn_egg" -> "383:50";
+				case "skeleton_spawn_egg" -> "383:51";
+				case "spider_spawn_egg" -> "383:52";
+				case "bat_spawn_egg" -> "383:53";
+				case "zombie_spawn_egg" -> "383:54";
+				case "slime_spawn_egg" -> "383:55";
+				case "ghast_spawn_egg" -> "383:56";
+				case "zombified_piglin_spawn_egg" -> "383:57";
+				case "enderman_spawn_egg" -> "383:58";
+				case "cave_spider_spawn_egg" -> "383:59";
+				case "silverfish_spawn_egg" -> "383:60";
+				case "blaze_spawn_egg" -> "383:61";
+				case "magma_cube_spawn_egg" -> "383:62";
+				case "witch_spawn_egg" -> "383:66";
+				case "endermite_spawn_egg" -> "383:67";
+				case "guardian_spawn_egg" -> "383:68";
+				case "pig_spawn_egg" -> "383:90";
+				case "sheep_spawn_egg" -> "383:91";
+				case "cow_spawn_egg" -> "383:92";
+				case "chicken_spawn_egg" -> "383:93";
+				case "squid_spawn_egg" -> "383:94";
+				case "wolf_spawn_egg" -> "383:95";
+				case "mooshroom_spawn_egg" -> "383:96";
+				case "ocelot_spawn_egg" -> "383:98";
+				case "horse_spawn_egg" -> "383:100";
+				case "rabbit_spawn_egg" -> "383:101";
+				case "villager_spawn_egg" -> "383:120";
+				case "experience_bottle" -> "384:0";
+				case "fire_charge" -> "385:0";
+				case "writable_book" -> "386:0";
+				case "written_book" -> "387:0";
+				case "emerald" -> "388:0";
+				case "item_frame" -> "389:0";
+				case "flower_pot" -> "390:0 (item) / 140:0 (block)";
+				case "potato" -> "392:0 (item) / 142:0 (block)";
+				case "baked_potato" -> "393:0";
+				case "poisonous_potato" -> "394:0";
+				case "map" -> "395:0 (empty) / 358:0";
+				case "golden_carrot" -> "396:0";
+				case "skeleton_skull" -> "397:0 (item) / 144:0 (block)";
+				case "wither_skeleton_skull" -> "397:1 (item) / 144:1 (block)";
+				case "zombie_head" -> "397:2 (item) / 144:2 (block)";
+				case "player_head" -> "397:3 (item) / 144:3 (block)";
+				case "creeper_head" -> "397:4 (item) / 144:4 (block)";
+				case "carrot_on_a_stick" -> "398:0";
+				case "nether_star" -> "399:0";
+				case "pumpkin_pie" -> "400:0";
+				case "firework_rocket" -> "401:0";
+				case "firework_star" -> "402:0";
+				case "enchanted_book" -> "403:0";
+				case "comparator" -> "404:0 (item) / 149:0 (block, off) / 150:0 (block, on)";
+				case "nether_brick" -> "405:0";
+				case "quartz" -> "406:0";
+				case "tnt_minecart" -> "407:0";
+				case "hopper_minecart" -> "408:0";
+				case "prismarine_shard" -> "409:0";
+				case "prismarine_crystals" -> "410:0";
+				case "rabbit" -> "411:0";
+				case "cooked_rabbit" -> "412:0";
+				case "rabbit_stew" -> "413:0";
+				case "rabbit_foot" -> "414:0";
+				case "rabbit_hide" -> "415:0";
+				case "armor_stand" -> "416:0";
+				case "iron_horse_armor" -> "417:0";
+				case "golden_horse_armor" -> "418:0";
+				case "diamond_horse_armor" -> "419:0";
+				case "lead" -> "420:0";
+				case "name_tag" -> "421:0";
+				case "command_block_minecart" -> "422:0";
+				case "mutton" -> "423:0";
+				case "cooked_mutton" -> "424:0";
+				case "black_banner" -> "425:0 (item) / 176:0 (block, standing) / 177:0 (block, wall)";
+				case "red_banner" -> "425:1";
+				case "green_banner" -> "425:2";
+				case "brown_banner" -> "425:3";
+				case "blue_banner" -> "425:4";
+				case "purple_banner" -> "425:5";
+				case "cyan_banner" -> "425:6";
+				case "light_gray_banner" -> "425:7";
+				case "gray_banner" -> "425:8";
+				case "pink_banner" -> "425:9";
+				case "lime_banner" -> "425:10";
+				case "yellow_banner" -> "425:11";
+				case "light_blue_banner" -> "425:12";
+				case "magenta_banner" -> "425:13";
+				case "orange_banner" -> "425:14";
+				case "white_banner" -> "425:15";
+//              426 - end_crystal
+				case "spruce_door" -> "427:0 (item) / 193:0 (block)";
+				case "birch_door" -> "428:0 (item) / 194:0 (block)";
+				case "jungle_door" -> "429:0 (item) / 195:0 (block)";
+				case "acacia_door" -> "430:0 (item) / 196:0 (block)";
+				case "dark_oak_door" -> "431:0 (item) / 197:0 (block)";
+				case "music_disc_13" -> "2256:0";
+				case "music_disc_cat" -> "2257:0";
+				case "music_disc_blocks" -> "2258:0";
+				case "music_disc_chirp" -> "2259:0";
+				case "music_disc_far" -> "2260:0";
+				case "music_disc_mall" -> "2261:0";
+				case "music_disc_mellohi" -> "2262:0";
+				case "music_disc_stal" -> "2263:0";
+				case "music_disc_strad" -> "2264:0";
+				case "music_disc_ward" -> "2265:0";
+				case "music_disc_11" -> "2266:0";
+				case "music_disc_wait" -> "2267:0";
+				default -> "";
+			};
+
+			if (!numericalId.isBlank() && config.getSetting("numIds")) {
+				lines.add(Component.empty());
+				if (numericalId.equals("126:0 / 125:0 / 44:2 / 43:2") && config.getSetting("extraIds")) {
+					lines.add(Component.literal("126:0 / 125:0 (double) /").withStyle(ChatFormatting.GRAY));
+					lines.add(Component.literal("44:2 (petrified) /").withStyle(ChatFormatting.GRAY));
+					lines.add(Component.literal("43:2 (double, petrified)").withStyle(ChatFormatting.GRAY));
+				} else {
+					if (!config.getSetting("extraIds") && numericalId.contains("/")) {
+						lines.add(Component.literal(numericalId.split("/")[0]).withStyle(ChatFormatting.GRAY));
+					} else {
+						lines.add(Component.literal(numericalId).withStyle(ChatFormatting.GRAY));
+					}
+				}
+			}
+		});
+
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+			LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("coords");
+			command.executes((ctx) -> {
+				FabricClientCommandSource source = ctx.getSource();
+				BlockPos position = source.getPlayer().getOnPos();
+				String stringifiedContent = String.format("> %s,%s,%s", position.getX()+0.5, position.getY(), position.getZ()+0.5);
+
+				KeyboardHandler keyboardHandler = Minecraft.getInstance().keyboardHandler;
+				keyboardHandler.setClipboard(stringifiedContent);
+
+				Component content = Component.literal(stringifiedContent).setStyle(Style.EMPTY
+						.withColor(ChatFormatting.GREEN)
+						.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stringifiedContent))
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to copy"))));
+				source.sendFeedback(content);
+				return Command.SINGLE_SUCCESS;
+			});
+
+			dispatcher.register(command);
+		});
+		LOGGER.info("NormalCreative has been initialized!");
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "normalcreative",
+	"version": "${version}",
+	"name": "NormalCreative",
+	"description": "Brings back the normal 1.8 creative menu",
+	"authors": [ "Matthew" ],
+	"contact": {
+		"homepage": "https://github.com/PeakDominance/NormalCreative/",
+		"email": "peakdominance1@gmail.com"
+	},
+	"license": "MIT",
+	"icon": "assets/normalcreative/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [ "me.peakdominance.nc.NormalCreative" ],
+		"modmenu": [ "me.peakdominance.nc.ModMenuIntegration" ]
+	},
+	"mixins": [ "normalcreative.mixins.json" ],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
