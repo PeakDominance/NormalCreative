@@ -19,7 +19,6 @@ public class Config {
                 this.configObject = generateDefaultConfig();
                 Files.writeString(configFilePath, generateDefaultConfig().toString());
                 NormalCreative.LOGGER.info("Created config file: {}", configFilePath);
-                System.out.println(configObject);
             } else {
                 String configContent = Files.readString(configFilePath);
                 this.configObject = new JSONObject(new ObjectMapper().readValue(configContent, HashMap.class));
