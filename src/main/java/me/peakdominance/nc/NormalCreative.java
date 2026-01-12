@@ -650,26 +650,6 @@ public class NormalCreative implements ModInitializer {
 			}
 		});
 
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-			LiteralArgumentBuilder<FabricClientCommandSource> command = ClientCommandManager.literal("coords");
-			command.executes((ctx) -> {
-				FabricClientCommandSource source = ctx.getSource();
-				BlockPos position = source.getPlayer().getOnPos();
-				String stringifiedContent = String.format("> %s,%s,%s", position.getX()+0.5, position.getY(), position.getZ()+0.5);
-
-				KeyboardHandler keyboardHandler = Minecraft.getInstance().keyboardHandler;
-				keyboardHandler.setClipboard(stringifiedContent);
-
-				Component content = Component.literal(stringifiedContent).setStyle(Style.EMPTY
-						.withColor(ChatFormatting.GREEN)
-						.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, stringifiedContent))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to copy"))));
-				source.sendFeedback(content);
-				return Command.SINGLE_SUCCESS;
-			});
-
-			dispatcher.register(command);
-		});
 		LOGGER.info("NormalCreative has been initialized!");
 	}
 }
