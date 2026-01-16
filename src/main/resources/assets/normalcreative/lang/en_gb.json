@@ -86,6 +86,7 @@
   "block.minecraft.oak_button": "Button",
   "block.minecraft.light_weighted_pressure_plate": "Weighted Pressure Plate (Light)",
   "block.minecraft.heavy_weighted_pressure_plate": "Weighted Pressure Plate (Heavy)",
+  "block.minecraft.daylight_detector": "Daylight Sensor",
   "block.minecraft.redstone_block": "Redstone Block",
   "item.minecraft.redstone": "Redstone",
 
