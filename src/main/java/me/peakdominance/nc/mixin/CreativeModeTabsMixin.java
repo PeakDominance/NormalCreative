@@ -8,12 +8,12 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.InstrumentTags;
 import net.minecraft.tags.PaintingVariantTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
@@ -42,9 +42,9 @@ public class CreativeModeTabsMixin {
 	}
 
 	@Unique
-	private static final ResourceLocation INVENTORY_BACKGROUND = CreativeModeTab.createTextureLocation("inventory");
+	private static final Identifier INVENTORY_BACKGROUND = CreativeModeTab.createTextureLocation("inventory");
 	@Unique
-	private static final ResourceLocation SEARCH_BACKGROUND = CreativeModeTab.createTextureLocation("item_search");
+	private static final Identifier SEARCH_BACKGROUND = CreativeModeTab.createTextureLocation("item_search");
 	@Unique
 	private static final ResourceKey<CreativeModeTab> BUILDING_BLOCKS = createKey("building_blocks");
 	@Unique
@@ -841,7 +841,7 @@ public class CreativeModeTabsMixin {
 								output.accept(Items.PURPUR_PILLAR);
 								output.accept(Items.PURPUR_STAIRS);
 								output.accept(Items.PURPUR_SLAB);
-								output.accept(Items.CHAIN);
+								output.accept(Items.IRON_CHAIN);
 								output.accept(Items.NETHERITE_BLOCK);
 								output.accept(Items.QUARTZ_BRICKS);
 								output.accept(Items.SMOOTH_QUARTZ);

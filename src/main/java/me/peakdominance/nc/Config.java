@@ -1,17 +1,16 @@
 package me.peakdominance.nc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minidev.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 
 public class Config {
     public static final Path configFilePath = FabricLoader.getInstance().getGameDir().resolve(".ncreative");
-    public JSONObject configObject = new JSONObject();
+    public JsonObject configObject = new JsonObject();
 
     public Config() {
         try {
@@ -21,7 +20,7 @@ public class Config {
                 NormalCreative.LOGGER.info("Created config file: {}", configFilePath);
             } else {
                 String configContent = Files.readString(configFilePath);
-                this.configObject = new JSONObject(new ObjectMapper().readValue(configContent, HashMap.class));
+                this.configObject = JsonParser.parseString(configContent).getAsJsonObject();
             }
         } catch (IOException e) {
             NormalCreative.LOGGER.info("Failed to create config file; an I/O error occurred or the parent directory does not exist");
@@ -30,28 +29,29 @@ public class Config {
 
     public boolean getSetting(String key) {
         return switch (key) {
-            case "extraItems" -> (Boolean) configObject.getOrDefault("extraItems", false);
-            case "modernItems" -> (Boolean) configObject.getOrDefault("modernItems", false);
-            case "numIds" -> (Boolean) configObject.getOrDefault("numIds", true);
-            case "extraIds" -> (Boolean) configObject.getOrDefault("extraIds", true);
+            case "extraItems" -> configObject.get("extraItems").getAsBoolean();
+            case "modernItems" -> configObject.get("modernItems").getAsBoolean();
+            case "numIds" -> configObject.get("numIds").getAsBoolean();
+            case "extraIds" -> configObject.get("extraIds").getAsBoolean();
             default -> throw new IllegalStateException("Unexpected value: " + key);
         };
     }
 
     public void setSetting(String key, Boolean value) {
         try {
-            this.configObject.appendField(key, value);
+            this.configObject.addProperty(key, value);
             Files.writeString(configFilePath, this.configObject.toString());
         } catch (IOException e) {
                 NormalCreative.LOGGER.info("Failed to update config; an I/O error occurred or the parent directory does not exist");
         }
     }
 
-    public static JSONObject generateDefaultConfig() {
-        return new JSONObject()
-                .appendField("extraItems", false)
-                .appendField("modernItems", false)
-                .appendField("numIds", true)
-                .appendField("extraIds", true);
+    public static JsonObject generateDefaultConfig() {
+        JsonObject newObject = new JsonObject();
+        newObject.addProperty("extraItems", false);
+        newObject.addProperty("modernItems", false);
+        newObject.addProperty("numIds", true);
+        newObject.addProperty("extraIds", true);
+        return newObject;
     }
 }

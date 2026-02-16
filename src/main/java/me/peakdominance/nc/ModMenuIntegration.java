@@ -6,6 +6,7 @@ import com.terraformersmc.modmenu.gui.widget.ModMenuButtonWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.TextAlignment;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -79,7 +80,6 @@ class SettingsScreen extends Screen {
         addRenderableWidget(extraIdsButton);
         addRenderableWidget(new Text("Note: Some changes require a relog to take place if you've already", width / 2, 100, 10, 10));
         addRenderableWidget(new Text("opened the creative menu, as the content builds when you first open it after joining a world", width / 2, 110, 10, 10));
-
     }
 }
 
@@ -91,12 +91,11 @@ class Text extends AbstractWidget {
     }
     @Override
     protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        context.drawCenteredString(
-                Minecraft.getInstance().font,
-                Component.literal(this.text).withStyle(ChatFormatting.WHITE),
+        context.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE).accept(
+                TextAlignment.CENTER,
                 this.getX(),
                 this.getY(),
-                200
+                Component.literal(text)
         );
     }
     @Override
